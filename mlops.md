@@ -1,88 +1,80 @@
-# Engenharia de Machine Learning e MLOps --- Guia de Estudo
+# Engenharia de Machine Learning e MLOps — Guia de Estudo
 
-> Material baseado no arquivo **Engenharia de Machine Learning e MLOps:
-> Da Teoria Rigorosa à Implementação de Produção com Containers e
-> Docker**.
+> Material baseado no arquivo **Engenharia de Machine Learning e MLOps: Da Teoria Rigorosa à Implementação de Produção com Containers e Docker**.
 >
-> O foco deste guia é entender **o problema, o conceito, por que usar
-> cada tecnologia, seus benefícios e como tudo se conecta**. O código
-> aparece apenas quando ajuda a compreender uma ideia.
+> O foco deste guia é entender **o problema, o conceito, por que usar cada tecnologia, seus benefícios e como tudo se conecta**. O código aparece apenas quando ajuda a compreender uma ideia.
 
-------------------------------------------------------------------------
+---
 
 # 1. Machine Learning não termina no treinamento
 
-É comum imaginar ML assim:
+&emsp;É comum imaginar ML assim:
 
-``` text
+```text
 Dados → Treinamento → Modelo → Predição
 ```
 
-Isso funciona para um notebook. Em produção, o ciclo é maior:
+&emsp;Isso funciona para um notebook. Em produção, o ciclo é maior:
 
-``` text
+```text
 Dados
- ↓
+↓
 Preparação
- ↓
+↓
 Treinamento
- ↓
+↓
 Validação
- ↓
+↓
 Registro
- ↓
+↓
 Deploy
- ↓
+↓
 Inferência
- ↓
+↓
 Monitoramento
- ↓
+↓
 Detecção de problemas
- ↓
+↓
 Retreinamento
- ↓
+↓
 Novo modelo
 ```
 
-A ideia central de **MLOps** é justamente transformar esse ciclo em um
-processo confiável, rastreável e automatizado.
+&emsp;A ideia central de **MLOps** é justamente transformar esse ciclo em um processo confiável, rastreável e automatizado.
 
-> **Treinar um modelo é uma etapa. Manter esse modelo funcionando
-> corretamente em produção é um problema de engenharia.**
+> **Treinar um modelo é uma etapa. Manter esse modelo funcionando corretamente em produção é um problema de engenharia.**
 
-------------------------------------------------------------------------
+---
 
 # 2. Por que existe o problema "funciona na minha máquina"?
 
-Imagine um modelo treinado com:
+&emsp;Imagine um modelo treinado com:
 
--   Python 3.11;
--   determinada versão do scikit-learn;
--   bibliotecas específicas;
--   determinado pipeline de pré-processamento;
--   arquivo de modelo treinado;
--   configurações locais.
+- Python 3.11;
+- determinada versão do scikit-learn;
+- bibliotecas específicas;
+- determinado pipeline de pré-processamento;
+- arquivo de modelo treinado;
+- configurações locais.
 
-Ao enviar apenas o código e o `.pkl` para outro servidor, podem existir:
+&emsp;Ao enviar apenas o código e o `.pkl` para outro servidor, podem existir:
 
--   outra versão do Python;
--   bibliotecas incompatíveis;
--   bibliotecas do sistema ausentes;
--   caminhos de arquivos diferentes;
--   configurações de GPU diferentes;
--   variáveis de ambiente diferentes.
+- outra versão do Python;
+- bibliotecas incompatíveis;
+- bibliotecas do sistema ausentes;
+- caminhos de arquivos diferentes;
+- configurações de GPU diferentes;
+- variáveis de ambiente diferentes.
 
-Em Machine Learning isso é ainda mais crítico porque não basta
-reproduzir o código. É necessário reproduzir o **ambiente, os dados, o
-pré-processamento e o modelo**.
+&emsp;Em Machine Learning isso é ainda mais crítico porque não basta reproduzir o código. É necessário reproduzir o **ambiente, os dados, o pré-processamento e o modelo**.
 
-------------------------------------------------------------------------
+---
 
 # 3. Um sistema de ML é maior que o algoritmo
 
-Podemos pensar em:
+&emsp;Podemos pensar em:
 
-``` text
+```text
 Sistema de ML
 │
 ├── Código
@@ -97,212 +89,188 @@ Sistema de ML
 └── Processo de atualização
 ```
 
-O algoritmo matemático é apenas uma parte.
+&emsp;O algoritmo matemático é apenas uma parte.
 
-Por isso, um modelo pode apresentar excelentes resultados no laboratório
-e ainda falhar quando integrado a um sistema real.
+&emsp;Por isso, um modelo pode apresentar excelentes resultados no laboratório e ainda falhar quando integrado a um sistema real.
 
-------------------------------------------------------------------------
+---
 
 # 4. Código, dados e hiperparâmetros
 
-O material apresenta a ideia:
+&emsp;O material apresenta a ideia:
 
-``` text
+```text
 Sistema Inteligente = f(Código, Dados, Hiperparâmetros)
 ```
 
 ## Código
 
-Define como os dados são tratados, quais transformações são feitas e
-como o modelo é utilizado.
+&emsp;Define como os dados são tratados, quais transformações são feitas e como o modelo é utilizado.
 
 ## Dados
 
-Determinam aquilo que o modelo aprende. Alterar o conjunto de
-treinamento pode produzir um modelo diferente mesmo com o mesmo código.
+&emsp;Determinam aquilo que o modelo aprende. Alterar o conjunto de treinamento pode produzir um modelo diferente mesmo com o mesmo código.
 
 ## Hiperparâmetros
 
-São configurações do treinamento, como taxa de aprendizado, profundidade
-de árvores, regularização e número de estimadores.
+&emsp;São configurações do treinamento, como taxa de aprendizado, profundidade de árvores, regularização e número de estimadores.
 
 ### Por que isso importa?
 
-Para reproduzir um modelo precisamos saber **o que foi usado para
-produzi-lo**, não apenas possuir o arquivo final.
+&emsp;Para reproduzir um modelo precisamos saber **o que foi usado para produzi-lo**, não apenas possuir o arquivo final.
 
-------------------------------------------------------------------------
+---
 
 # 5. Bare-metal, máquinas virtuais e containers
 
 ## Bare-metal
 
-A aplicação executa diretamente no sistema operacional da máquina
-física:
+&emsp;A aplicação executa diretamente no sistema operacional da máquina física:
 
-``` text
+```text
 Aplicação
- ↓
+↓
 Sistema Operacional
- ↓
+↓
 Hardware
 ```
 
 ### Benefício
 
-Pouco overhead.
+&emsp;Pouco overhead.
 
 ### Problema
 
-As aplicações compartilham o mesmo ambiente. Projetos que precisam de
-versões incompatíveis de Python, bibliotecas ou CUDA podem entrar em
-conflito.
+&emsp;As aplicações compartilham o mesmo ambiente. Projetos que precisam de versões incompatíveis de Python, bibliotecas ou CUDA podem entrar em conflito.
 
-------------------------------------------------------------------------
+---
 
 ## Máquina virtual
 
-Uma VM virtualiza o hardware:
+&emsp;Uma VM virtualiza o hardware:
 
-``` text
+```text
 Hardware
- ↓
+↓
 Hypervisor
- ↓
+↓
 VM
- ↓
+↓
 Sistema Operacional convidado
- ↓
+↓
 Aplicação
 ```
 
-Cada VM possui seu próprio sistema operacional.
+&emsp;Cada VM possui seu próprio sistema operacional.
 
 ### Benefícios
 
--   isolamento forte;
--   possibilidade de sistemas operacionais diferentes;
--   separação maior entre ambientes.
+- isolamento forte;
+- possibilidade de sistemas operacionais diferentes;
+- separação maior entre ambientes.
 
 ### Desvantagens
 
--   mais memória;
--   mais disco;
--   inicialização mais lenta;
--   maior overhead.
+- mais memória;
+- mais disco;
+- inicialização mais lenta;
+- maior overhead.
 
-------------------------------------------------------------------------
+---
 
 ## Container
 
-Containers utilizam o kernel do host e isolam processos:
+&emsp;Containers utilizam o kernel do host e isolam processos:
 
-``` text
+```text
 Sistema Operacional
- ↓
+↓
 Kernel
- ↓
+↓
 Docker
- ↓
+↓
 Container
- ↓
+↓
 Aplicação
 ```
 
-> **VM virtualiza uma máquina; container isola processos dentro de uma
-> máquina.**
+> **VM virtualiza uma máquina; container isola processos dentro de uma máquina.**
 
-------------------------------------------------------------------------
+---
 
 # 6. VM x Container
 
-| Característica | VM | Container |
-|---|---|---|
-| Virtualização | Hardware | Ambiente/processos |
-| Sistema operacional | Cada VM possui um | Compartilhado |
-| Kernel | Próprio | Compartilhado |
-| Consumo | Maior | Menor |
-| Inicialização | Mais lenta | Mais rápida |
-| Isolamento | Mais forte | Mais leve |
+| Característica      | VM                | Container          |
+| ------------------- | ----------------- | ------------------ |
+| Virtualização       | Hardware          | Ambiente/processos |
+| Sistema operacional | Cada VM possui um | Compartilhado      |
+| Kernel              | Próprio           | Compartilhado      |
+| Consumo             | Maior             | Menor              |
+| Inicialização       | Mais lenta        | Mais rápida        |
+| Isolamento          | Mais forte        | Mais leve          |
 
-Containers são especialmente úteis quando queremos empacotar aplicações
-e suas dependências de maneira reproduzível.
+&emsp;Containers são especialmente úteis quando queremos empacotar aplicações e suas dependências de maneira reproduzível.
 
-------------------------------------------------------------------------
+---
 
-# 7. A ideia da "cesta"
+# 7. Container como ambiente reproduzível
 
-Imagine uma cesta de piquenique. Em vez de depender do que existe no
-parque, você leva tudo o que precisa.
+&emsp;A ideia da "cesta" ajuda a entender a principal vantagem do container: em vez de depender do que existe na máquina de destino, o ambiente necessário é empacotado junto com a aplicação.
 
-Para ML, essa cesta pode conter:
+&emsp;Para ML, essa cesta pode conter Python, bibliotecas, código, modelo treinado, pesos, pré-processamento e configurações. Assim, o ambiente de execução deixa de depender tanto da máquina onde o software foi instalado.
 
-``` text
-Python
-+ bibliotecas
-+ código
-+ modelo treinado
-+ pesos
-+ pré-processamento
-+ configurações
-```
+> **A ideia central é empacotar o ambiente necessário para tornar a execução mais reproduzível.**
 
-Assim, o ambiente de execução deixa de depender tanto da máquina onde o
-software foi instalado.
-
-------------------------------------------------------------------------
+---
 
 # 8. Namespaces
 
-Namespaces controlam **o que um processo consegue enxergar**.
+&emsp;Namespaces controlam **o que um processo consegue enxergar**.
 
-Um container pode possuir uma visão isolada de:
+&emsp;Um container pode possuir uma visão isolada de:
 
--   processos;
--   rede;
--   pontos de montagem;
--   usuários;
--   hostname.
+- processos;
+- rede;
+- pontos de montagem;
+- usuários;
+- hostname.
 
 ### PID namespace
 
-Process ID. Isola a árvore de processos. O processo principal pode ser visto como
-PID 1 dentro do container.
+&emsp;Process ID. Isola a árvore de processos. O processo principal pode ser visto como PID 1 dentro do container.
 
 ### Network namespace
 
-Isola interfaces, IPs, portas e rotas.
+&emsp;Isola interfaces, IPs, portas e rotas.
 
 ### Mount namespace
 
-Isola a visão dos pontos de montagem e do sistema de arquivos.
+&emsp;Isola a visão dos pontos de montagem e do sistema de arquivos.
 
 ### User namespace
 
-Permite separar identificadores de usuários entre container e host.
+&emsp;Permite separar identificadores de usuários entre container e host.
 
 ### Regra para lembrar
 
 > **Namespaces = visão do sistema.**
 
-------------------------------------------------------------------------
+---
 
 # 9. cgroups
 
-Cgroups, ou Control Groups, controlam **quanto de recurso um processo
-pode consumir**.
+&emsp;Cgroups, ou Control Groups, controlam **quanto de recurso um processo pode consumir**.
 
-Podemos estabelecer limites de:
+&emsp;Podemos estabelecer limites de:
 
--   CPU;
--   memória;
--   número de processos;
--   I/O.
+- CPU;
+- memória;
+- número de processos;
+- I/O.
 
-Por exemplo:
+&emsp;Por exemplo:
 
-``` text
+```text
 Container
 ├── CPU: limite definido
 └── Memória: limite definido
@@ -310,176 +278,169 @@ Container
 
 ### Por que usar?
 
-Evita que um serviço consuma recursos indefinidamente e prejudique os
-demais.
+&emsp;Evita que um serviço consuma recursos indefinidamente e prejudique os demais.
 
-Isso melhora:
+&emsp;Isso melhora:
 
--   isolamento;
--   previsibilidade;
--   estabilidade;
--   utilização da infraestrutura.
+- isolamento;
+- previsibilidade;
+- estabilidade;
+- utilização da infraestrutura.
 
-------------------------------------------------------------------------
+---
 
 # 10. CPU x memória
 
-Os limites possuem comportamentos diferentes.
+&emsp;Os limites possuem comportamentos diferentes.
 
 ### CPU
 
-Um processo pode sofrer **throttling** e ficar mais lento.
+&emsp;Um processo pode sofrer **throttling** e ficar mais lento.
 
 ### Memória
 
-Quando o limite é ultrapassado e não há memória suficiente para
-recuperar, pode ocorrer **OOM kill**.
+&emsp;Quando o limite é ultrapassado e não há memória suficiente para recuperar, pode ocorrer **OOM kill**.
 
-Isso pode aparecer associado ao:
+&emsp;Isso pode aparecer associado ao:
 
-``` text
+```text
 exit code 137
 ```
 
-Portanto:
+&emsp;Portanto:
 
-``` text
+```text
 CPU → pode gerar lentidão
-
 Memória → pode provocar encerramento
 ```
 
-------------------------------------------------------------------------
+---
 
 # 11. Imagem, container e registry
 
 ## Imagem
 
-É o modelo utilizado para criar containers.
+&emsp;É o modelo utilizado para criar containers.
 
-``` text
+```text
 Imagem → modelo
 ```
 
 ## Container
 
-É uma execução de uma imagem.
+&emsp;É uma execução de uma imagem.
 
-``` text
+```text
 Container → instância em execução
 ```
 
-Uma analogia:
+&emsp;Uma analogia:
 
-``` text
+```text
 Imagem = classe
 Container = objeto
 ```
 
 ## Registry
 
-É um repositório de imagens.
+&emsp;É um repositório de imagens.
 
-O fluxo pode ser:
+&emsp;O fluxo pode ser:
 
-``` text
+```text
 Dockerfile
- ↓
+↓
 Build
- ↓
+↓
 Imagem
- ↓
+↓
 Registry
- ↓
+↓
 Pull
- ↓
+↓
 Container
 ```
 
-------------------------------------------------------------------------
+---
 
 # 12. Camadas de uma imagem
 
-Imagens Docker são formadas por camadas:
+&emsp;Imagens Docker são formadas por camadas:
 
-``` text
+```text
 Camada base
- ↓
+↓
 Dependências
- ↓
+↓
 Código
- ↓
+↓
 Configuração
 ```
 
 ### Por que isso é útil?
 
-Camadas que não mudaram podem ser reutilizadas.
+&emsp;Camadas que não mudaram podem ser reutilizadas. Isso:
 
-Isso:
+- acelera builds;
+- reduz downloads;
+- economiza espaço;
+- evita trabalho repetido.
 
--   acelera builds;
--   reduz downloads;
--   economiza espaço;
--   evita trabalho repetido.
-
-------------------------------------------------------------------------
+---
 
 # 13. Dockerfile
 
-O Dockerfile descreve **como construir uma imagem**.
+&emsp;O Dockerfile descreve **como construir uma imagem**.
 
-É uma receita automatizada do ambiente.
-
-Principais instruções:
+&emsp;É uma receita automatizada do ambiente. Principais instruções:
 
 ## `FROM`
 
-Define a imagem base.
+&emsp;Define a imagem base.
 
-``` dockerfile
+```dockerfile
 FROM python:3.11-slim
 ```
 
-Evita começar o ambiente do zero.
+&emsp;Evita começar o ambiente do zero.
 
 ## `WORKDIR`
 
-Define o diretório de trabalho.
+&emsp;Define o diretório de trabalho.
 
 ## `COPY`
 
-Copia arquivos para a imagem.
+&emsp;Copia arquivos para a imagem.
 
 ## `RUN`
 
-Executa comandos durante o build.
+&emsp;Executa comandos durante o build.
 
-``` dockerfile
+```dockerfile
 RUN pip install -r requirements.txt
 ```
 
 ## `CMD`
 
-Define o processo principal executado quando o container inicia.
+&emsp;Define o processo principal executado quando o container inicia.
 
-``` dockerfile
+```dockerfile
 CMD ["python", "app.py"]
 ```
 
 ## `EXPOSE`
 
-Documenta a porta usada pela aplicação.
+&emsp;Documenta a porta usada pela aplicação.
 
 > `EXPOSE` não publica a porta no computador.
 
-------------------------------------------------------------------------
+---
 
 # 14. `RUN` x `CMD`
 
-Essa diferença precisa estar muito clara:
+&emsp;Essa diferença precisa estar muito clara:
 
-``` text
+```text
 RUN
 → acontece durante o build
 
@@ -487,184 +448,163 @@ CMD
 → acontece quando o container inicia
 ```
 
-Confundir os dois é um erro comum.
+&emsp;Confundir os dois é um erro comum.
 
-------------------------------------------------------------------------
+---
 
 # 15. Por que a ordem do Dockerfile importa?
 
-Uma organização comum é:
+&emsp;Uma organização comum é:
 
-``` dockerfile
+```dockerfile
 COPY requirements.txt .
+
 RUN pip install -r requirements.txt
 
 COPY . .
 ```
 
-As dependências geralmente mudam menos que o código.
+&emsp;As dependências geralmente mudam menos que o código.
 
-Se apenas o código mudar:
+&emsp;Se apenas o código mudar:
 
-``` text
+```text
 requirements.txt não mudou
-        ↓
+↓
 camada de instalação pode ser reutilizada
-        ↓
+↓
 somente o código é reconstruído
 ```
 
-Isso aproveita melhor o cache do Docker.
+&emsp;Isso aproveita melhor o cache do Docker.
 
-------------------------------------------------------------------------
+---
 
 # 16. Multi-stage build
 
-Multi-stage build usa diferentes etapas para construir a aplicação e
-gerar uma imagem final menor.
+&emsp;Multi-stage build usa diferentes etapas para construir a aplicação e gerar uma imagem final menor.
 
-A lógica é:
+&emsp;A lógica é:
 
-``` text
+```text
 Etapa de build
- ↓
+↓
 Compilar / instalar / preparar
- ↓
+↓
 Artefatos necessários
- ↓
+↓
 Imagem final
 ```
 
-Ferramentas usadas somente para construir a aplicação não precisam
-permanecer na imagem final.
+&emsp;Ferramentas usadas somente para construir a aplicação não precisam permanecer na imagem final.
 
 ### Benefícios
 
--   imagem menor;
--   download mais rápido;
--   menor armazenamento;
--   menor superfície de ataque;
--   deploy mais rápido.
+- imagem menor;
+- download mais rápido;
+- menor armazenamento;
+- menor superfície de ataque;
+- deploy mais rápido.
 
-------------------------------------------------------------------------
+---
 
 # 17. Usuário não-root
 
-Aplicações não precisam necessariamente executar como `root`.
+&emsp;Aplicações não precisam necessariamente executar como `root`. Utilizar um usuário com menos privilégios reduz o impacto potencial de uma vulnerabilidade.
 
-Utilizar um usuário com menos privilégios reduz o impacto potencial de
-uma vulnerabilidade.
+&emsp;Esse princípio é chamado de **least privilege**.
 
-Esse princípio é chamado de **least privilege**.
-
-``` text
+```text
 Aplicação
- ↓
+↓
 Privilégios mínimos
 ```
 
-é preferível a:
+&emsp;É preferível a:
 
-``` text
+```text
 Aplicação
- ↓
+↓
 root
 ```
 
-quando o root não é necessário.
+&emsp;quando o root não é necessário.
 
-------------------------------------------------------------------------
+---
 
 # 18. Docker aplicado a Machine Learning
 
-Uma aplicação de ML pode precisar carregar:
+&emsp;Em Machine Learning, a reprodutibilidade do ambiente também envolve garantir que o modelo receba os dados na representação esperada durante o treinamento.
 
-``` text
-Python
-+ bibliotecas
-+ código
-+ modelo
-+ pré-processamento
-+ configurações
-```
+&emsp;Por isso, a aplicação em produção precisa manter consistentes as etapas de validação, normalização e feature engineering utilizadas antes da inferência.
 
-Isso é importante porque o modelo precisa receber os dados na mesma
-representação esperada durante o treinamento.
+&emsp;Um fluxo de inferência pode ser:
 
-Exemplo:
-
-``` text
+```text
 JSON
- ↓
+↓
 Validação
- ↓
+↓
 Normalização
- ↓
+↓
 Feature engineering
- ↓
+↓
 Modelo
- ↓
+↓
 Predição
 ```
 
-Se o pré-processamento for diferente entre treino e produção, o modelo
-pode receber dados em um formato diferente daquele que aprendeu.
+&emsp;Se o pré-processamento for diferente entre treino e produção, o modelo pode receber dados em um formato diferente daquele que aprendeu.
 
-------------------------------------------------------------------------
+---
 
 # 19. Model Serving
 
-Model serving é disponibilizar o modelo para receber entradas e retornar
-previsões.
+&emsp;Model serving é disponibilizar o modelo para receber entradas e retornar previsões.
 
-``` text
+```text
 Cliente
- ↓
+↓
 POST /predict
- ↓
+↓
 API
- ↓
+↓
 Validação
- ↓
+↓
 Pré-processamento
- ↓
+↓
 Modelo
- ↓
+↓
 Predição
- ↓
+↓
 JSON
 ```
 
-Isso transforma o modelo em um serviço que pode ser consumido por outros
-sistemas.
+&emsp;Isso transforma o modelo em um serviço que pode ser consumido por outros sistemas.
 
-------------------------------------------------------------------------
+---
 
 # 20. FastAPI
 
-FastAPI pode ser utilizada para criar a API de inferência.
+&emsp;FastAPI pode ser utilizada para criar a API de inferência. Ela funciona como uma camada entre:
 
-Ela funciona como uma camada entre:
-
-``` text
+```text
 Sistema consumidor
-        ↓
-      API
-        ↓
-     Modelo
+↓
+API
+↓
+Modelo
 ```
 
-O consumidor não precisa conhecer os detalhes matemáticos do modelo.
+&emsp;O consumidor não precisa conhecer os detalhes matemáticos do modelo.
 
-------------------------------------------------------------------------
+---
 
-# 21. Pydantic e contratos
+# 21. Pydantic e validação de entradas
 
-Uma API precisa verificar se os dados recebidos são válidos.
+&emsp;Uma API precisa verificar se os dados recebidos são válidos. Por exemplo:
 
-Por exemplo:
-
-``` text
+```text
 customer_id
 age
 annual_income
@@ -672,209 +612,148 @@ credit_score
 loan_amount
 ```
 
-Pydantic permite definir e validar esse contrato.
+&emsp;Pydantic permite definir e validar esse contrato.
 
 ### Benefícios
 
--   tipos explícitos;
--   validação automática;
--   erros mais claros;
--   contrato de entrada bem definido.
+- tipos explícitos;
+- validação automática;
+- erros mais claros;
+- contrato de entrada bem definido.
 
-Isso evita que dados inválidos cheguem ao modelo.
+&emsp;Isso evita que dados inválidos cheguem ao modelo.
 
-------------------------------------------------------------------------
+### Por que validar antes da inferência?
 
-# 22. Por que validar antes da inferência?
+&emsp;Sem validação:
 
-Sem validação:
-
-``` text
+```text
 Entrada inválida
- ↓
+↓
 Modelo
- ↓
+↓
 Erro inesperado
 ```
 
-Com validação:
+&emsp;Com validação:
 
-``` text
+```text
 Entrada
- ↓
+↓
 Validação
- ├── inválida → erro controlado
- └── válida → modelo
+├── inválida → erro controlado
+└── válida → modelo
 ```
 
-Isso melhora a confiabilidade da API.
+&emsp;Isso melhora a confiabilidade da API.
 
-------------------------------------------------------------------------
+---
 
-# 23. O problema industrial de ML
+# 22. Por que ML é diferente de software tradicional?
 
-No laboratório:
+&emsp;Em software tradicional, frequentemente pensamos:
 
-``` text
-Notebook
- ↓
-Treina
- ↓
-Avalia
- ↓
-Modelo
-```
-
-Na empresa:
-
-``` text
-Dados
- ↓
-Ingestão
- ↓
-Transformação
- ↓
-Features
- ↓
-Treinamento
- ↓
-Validação
- ↓
-Registro
- ↓
-Deploy
- ↓
-Inferência
- ↓
-Logs
- ↓
-Monitoramento
- ↓
-Drift
- ↓
-Retreinamento
-```
-
-MLOps existe para organizar esse segundo cenário.
-
-------------------------------------------------------------------------
-
-# 24. Por que ML é diferente de software tradicional?
-
-Em software tradicional, frequentemente pensamos:
-
-``` text
+```text
 Código + Entrada → Saída
 ```
 
-Em ML:
+&emsp;Em ML:
 
-``` text
+```text
 Código
 +
 Dados
 +
 Configurações
- ↓
+↓
 Modelo
- ↓
+↓
 Comportamento
 ```
 
-Mesmo sem alterar o código, mudanças nos dados podem alterar o
-comportamento do sistema.
+&emsp;Mesmo sem alterar o código, mudanças nos dados podem alterar o comportamento do sistema.
 
-------------------------------------------------------------------------
+---
 
-# 25. Dívida técnica em Machine Learning
+# 23. Dívida técnica em Machine Learning
 
-O material utiliza o trabalho de Sculley et al. para mostrar que o
-algoritmo é apenas uma pequena parte de um sistema de ML.
+&emsp;O material utiliza o trabalho de Sculley et al. para mostrar que o algoritmo é apenas uma pequena parte de um sistema de ML.
 
-O sistema pode envolver:
+&emsp;O sistema pode envolver:
 
--   coleta de dados;
--   pipelines;
--   features;
--   infraestrutura;
--   integração;
--   monitoramento;
--   configuração;
--   segurança.
+- coleta de dados;
+- pipelines;
+- features;
+- infraestrutura;
+- integração;
+- monitoramento;
+- configuração;
+- segurança.
 
-Portanto:
+> **Um modelo funcionando em um notebook não significa que temos um sistema de ML pronto para produção.**
 
-> **Um modelo funcionando em um notebook não significa que temos um
-> sistema de ML pronto para produção.**
+---
 
-------------------------------------------------------------------------
+# 24. Boundary Erosion
 
-# 26. Boundary Erosion
+&emsp;**Boundary Erosion** é a erosão dos limites entre responsabilidades.
 
-**Boundary Erosion** é a erosão dos limites entre responsabilidades.
+&emsp;Um exemplo ruim seria um único script responsável por:
 
-Um exemplo ruim seria um único script responsável por:
-
-``` text
+```text
 ler banco
- ↓
+↓
 tratar dados
- ↓
+↓
 treinar
- ↓
+↓
 gerar gráficos
- ↓
+↓
 salvar modelo
- ↓
+↓
 iniciar API
 ```
 
 ### Problema
 
-Fica difícil:
+&emsp;Fica difícil:
 
--   testar;
--   modificar;
--   reutilizar;
--   entender.
+- testar;
+- modificar;
+- reutilizar;
+- entender.
 
-Separar responsabilidades torna o sistema mais sustentável.
+&emsp;Separar responsabilidades torna o sistema mais sustentável.
 
-------------------------------------------------------------------------
+---
 
-# 27. CACE --- Changing Anything Changes Everything
+# 25. CACE — Changing Anything Changes Everything
 
-Em ML, uma pequena alteração pode gerar efeitos em várias partes do
-sistema.
+&emsp;Em ML, uma pequena alteração pode gerar efeitos em várias partes do sistema. Exemplo:
 
-Exemplo:
-
-``` text
+```text
 Nova feature
- ↓
+↓
 Novo espaço de entrada
- ↓
+↓
 Novo treinamento
- ↓
+↓
 Novos pesos
- ↓
+↓
 Novas métricas
- ↓
+↓
 Novo comportamento
 ```
 
-Por isso mudanças precisam ser rastreáveis.
+&emsp;Por isso mudanças precisam ser rastreáveis.
 
-------------------------------------------------------------------------
+---
 
-# 28. Pipeline Jungles
+# 26. Pipeline Jungles
 
-Uma pipeline jungle acontece quando o fluxo de ML cresce sem
-organização.
+&emsp;Uma pipeline jungle acontece quando o fluxo de ML cresce sem organização. Exemplo:
 
-Exemplo:
-
-``` text
+```text
 script.py
 cron
 SQL manual
@@ -884,100 +763,91 @@ dados_final.csv
 dados_final_v2.csv
 ```
 
-Depois fica difícil responder:
+&emsp;Depois fica difícil responder:
 
 > Qual processo realmente gerou o modelo em produção?
 
-MLOps tenta substituir esse conjunto de scripts por pipelines
-rastreáveis e automatizados.
+&emsp;MLOps tenta substituir esse conjunto de scripts por pipelines rastreáveis e automatizados.
 
-------------------------------------------------------------------------
+---
 
-# 29. Glue Code
+# 27. Glue Code
 
-Glue code é código improvisado para conectar sistemas.
+&emsp;Glue code é código improvisado para conectar sistemas. Por exemplo:
 
-Por exemplo:
-
-``` text
+```text
 Banco
- ↓
+↓
 Script
- ↓
+↓
 CSV
- ↓
+↓
 Python
- ↓
+↓
 JSON
- ↓
+↓
 API
 ```
 
-Quanto mais conversões improvisadas existirem, maior a fragilidade do
-sistema.
+&emsp;Quanto mais conversões improvisadas existirem, maior a fragilidade do sistema.
 
-Uma arquitetura bem definida reduz esse acoplamento.
+&emsp;Uma arquitetura bem definida reduz esse acoplamento.
 
-------------------------------------------------------------------------
+---
 
-# 30. Data Testing Debt
+# 28. Data Testing Debt
 
-Testar apenas o código não basta.
+&emsp;Testar apenas o código não basta.
 
-Podemos ter:
+&emsp;Podemos ter:
 
-``` text
+```text
 Código → 100% dos testes passando
 ```
 
-e:
+&emsp;e:
 
-``` text
+```text
 Dataset → coluna inteira nula
 ```
 
-Por isso também precisamos testar:
+&emsp;Por isso também precisamos testar:
 
--   presença de colunas;
--   tipos;
--   valores ausentes;
--   intervalos;
--   distribuição;
--   qualidade dos dados.
+- presença de colunas;
+- tipos;
+- valores ausentes;
+- intervalos;
+- distribuição;
+- qualidade dos dados.
 
-------------------------------------------------------------------------
+---
 
-# 31. O que é MLOps?
+# 29. O que é MLOps?
 
-MLOps significa **Machine Learning Operations**.
+&emsp;MLOps significa **Machine Learning Operations**. Não é uma única ferramenta.
 
-Não é uma única ferramenta.
+&emsp;É a combinação de:
 
-É a combinação de:
+- práticas;
+- processos;
+- automação;
+- arquitetura;
+- ferramentas.
 
--   práticas;
--   processos;
--   automação;
--   arquitetura;
--   ferramentas.
+&emsp;O objetivo é permitir que modelos sejam:
 
-O objetivo é permitir que modelos sejam:
+- entregues;
+- reproduzidos;
+- monitorados;
+- auditados;
+- atualizados;
+- mantidos em produção.
 
--   entregues;
--   reproduzidos;
--   monitorados;
--   auditados;
--   atualizados;
--   mantidos em produção.
+> **MLOps aplica princípios de engenharia e operações ao ciclo de vida de Machine Learning.**
 
-> **MLOps aplica princípios de engenharia e operações ao ciclo de vida
-> de Machine Learning.**
+### MLOps integra três áreas
 
-------------------------------------------------------------------------
-
-# 32. MLOps integra três áreas
-
-``` text
+```text
 Engenharia de Dados
         +
 Ciência de Dados
@@ -987,28 +857,25 @@ DevOps
       MLOps
 ```
 
-### Engenharia de Dados
+#### Engenharia de Dados
 
-Dados, ingestão, transformação, armazenamento e qualidade.
+&emsp;Dados, ingestão, transformação, armazenamento e qualidade.
 
-### Ciência de Dados
+#### Ciência de Dados
 
-Features, treinamento, avaliação e modelos.
+&emsp;Features, treinamento, avaliação e modelos.
 
-### DevOps
+#### DevOps
 
-Automação, infraestrutura, deploy e observabilidade.
+&emsp;Automação, infraestrutura, deploy e observabilidade.
 
-------------------------------------------------------------------------
+---
 
-# 33. CD4ML
+# 30. CD4ML
 
-**CD4ML --- Continuous Delivery for Machine Learning** --- adapta a
-ideia de entrega contínua ao contexto de ML.
+&emsp;**CD4ML — Continuous Delivery for Machine Learning** — adapta a ideia de entrega contínua ao contexto de ML. Três elementos precisam evoluir juntos:
 
-Três elementos precisam evoluir juntos:
-
-``` text
+```text
 Código
 Dados
 Modelos
@@ -1016,171 +883,164 @@ Modelos
 
 ## Código
 
-Pipelines, APIs e regras versionadas.
+&emsp;Pipelines, APIs e regras versionadas.
 
 ## Dados
 
-Dados brutos e transformados precisam ser rastreáveis e, quando
-necessário, versionados.
+&emsp;Dados brutos e transformados precisam ser rastreáveis e, quando necessário, versionados.
 
 ## Modelos
 
-Artefatos precisam ser catalogados com informações como métricas,
-hiperparâmetros e linhagem.
+&emsp;Artefatos precisam ser catalogados com informações como métricas, hiperparâmetros e linhagem.
 
-------------------------------------------------------------------------
+---
 
-# 34. Git x DVC
+# 31. Git x DVC
 
-Uma divisão útil:
+&emsp;Uma divisão útil:
 
-``` text
+```text
 Git
- ↓
+↓
 Código + configuração
 
 DVC
- ↓
+↓
 Dados + versões dos dados
 ```
 
-Git é excelente para código. DVC pode complementar o processo quando
-datasets e artefatos de dados são grandes ou precisam de versionamento
-específico.
+&emsp;Git é excelente para código. DVC pode complementar o processo quando datasets e artefatos de dados são grandes ou precisam de versionamento específico.
 
 ### Benefício
 
-Permite reconstruir melhor o contexto de um experimento.
+&emsp;Permite reconstruir melhor o contexto de um experimento.
 
-------------------------------------------------------------------------
+---
 
-# 35. MLflow
+# 32. MLflow
 
-MLflow pode ser utilizado para **experiment tracking**.
+&emsp;MLflow pode ser utilizado para **experiment tracking**.
 
-Podemos ter:
+&emsp;Podemos ter:
 
-``` text
+```text
 Run 1
 Run 2
 Run 3
 Run 4
 ```
 
-Cada execução pode registrar:
+&emsp;Cada execução pode registrar:
 
--   hiperparâmetros;
--   métricas;
--   artefatos;
--   modelo.
+- hiperparâmetros;
+- métricas;
+- artefatos;
+- modelo.
 
-Isso permite responder:
+&emsp;Isso permite responder:
 
 > Qual configuração gerou este resultado?
 
-------------------------------------------------------------------------
+---
 
-# 36. Model Registry
+# 33. Model Registry
 
-O Model Registry organiza versões e estágios dos modelos.
+&emsp;O Model Registry organiza versões e estágios dos modelos. Conceitualmente:
 
-Conceitualmente:
-
-``` text
+```text
 Treinado
- ↓
+↓
 Validado
- ↓
+↓
 Candidato
- ↓
+↓
 Produção
 ```
 
 ### Por que usar?
 
-Evita a situação:
+&emsp;Evita a situação:
 
-``` text
+```text
 modelo_final.pkl
 modelo_final_v2.pkl
 modelo_final_novo.pkl
 modelo_final_real.pkl
 ```
 
-O registro cria uma referência mais organizada para os modelos.
+&emsp;O registro cria uma referência mais organizada para os modelos.
 
-------------------------------------------------------------------------
+---
 
-# 37. Níveis de maturidade em MLOps
+# 34. Níveis de maturidade em MLOps
 
-## Nível 0 --- Processo manual
+## Nível 0 — Processo manual
 
-Características:
+&emsp;Características:
 
--   notebooks;
--   scripts avulsos;
--   treinamento manual;
--   deploy manual;
--   arquivos compartilhados.
+- notebooks;
+- scripts avulsos;
+- treinamento manual;
+- deploy manual;
+- arquivos compartilhados.
 
-Problema:
+&emsp;Problema:
 
-``` text
+```text
 Intervenção humana
- ↓
+↓
 Erros
- ↓
+↓
 Baixa reprodutibilidade
 ```
 
-------------------------------------------------------------------------
+---
 
-## Nível 1 --- Continuous Training
+## Nível 1 — Continuous Training
 
-Começamos a automatizar o treinamento:
+&emsp;Começamos a automatizar o treinamento:
 
-``` text
+```text
 Novos dados
- ↓
+↓
 Pipeline
- ↓
+↓
 Validação
- ↓
+↓
 Treinamento
- ↓
+↓
 Avaliação
 ```
 
-------------------------------------------------------------------------
+---
 
-## Nível 2 --- CI/CD para ML
+## Nível 2 — CI/CD para ML
 
-Existe uma automação mais completa:
+&emsp;Existe uma automação mais completa:
 
-``` text
+```text
 Código
 Dados
 Modelo
- ↓
+↓
 Testes
- ↓
+↓
 Validação
- ↓
+↓
 Build
- ↓
+↓
 Deploy
- ↓
+↓
 Monitoramento
 ```
 
-Também podem existir mecanismos como Champion/Challenger, deploy
-controlado e retreinamento orientado por eventos.
+&emsp;Também podem existir mecanismos como Champion/Challenger, deploy controlado e retreinamento orientado por eventos.
 
-------------------------------------------------------------------------
+---
 
-# 38. Champion x Challenger
+# 35. Champion x Challenger
 
-``` text
+```text
 Champion
 → modelo atualmente utilizado
 
@@ -1188,751 +1048,584 @@ Challenger
 → novo modelo candidato
 ```
 
-O Challenger é avaliado antes de substituir o Champion.
+&emsp;O Challenger é avaliado antes de substituir o Champion.
 
-Isso reduz o risco de colocar uma nova versão em produção sem validação
-suficiente.
+&emsp;Isso reduz o risco de colocar uma nova versão em produção sem validação suficiente.
 
-------------------------------------------------------------------------
+---
 
-# 39. Shadow Deployment
+# 36. Shadow Deployment
 
-No Shadow Mode, o novo modelo recebe dados reais, mas suas respostas não
-são utilizadas para a decisão final.
+&emsp;No Shadow Mode, o novo modelo recebe dados reais, mas suas respostas não são utilizadas para a decisão final.
 
-``` text
+```text
 Tráfego real
-   ├──► Champion → decisão real
-   └──► Challenger → avaliação
+├──► Champion → decisão real
+└──► Challenger → avaliação
 ```
 
 ### Benefício
 
-Permite comparar o novo modelo com dados reais sem colocá-lo
-imediatamente no controle da decisão.
+&emsp;Permite comparar o novo modelo com dados reais sem colocá-lo imediatamente no controle da decisão.
 
-------------------------------------------------------------------------
+---
 
-# 40. Canary Deployment
+# 37. Canary Deployment
 
-No Canary, uma parcela do tráfego é direcionada à nova versão.
+&emsp;No Canary, uma parcela do tráfego é direcionada à nova versão. Exemplo:
 
-Exemplo:
-
-``` text
+```text
 95% → versão atual
 5%  → versão nova
 ```
 
-Se o comportamento for adequado, a nova versão pode receber mais
-tráfego.
+&emsp;Se o comportamento for adequado, a nova versão pode receber mais tráfego.
 
 ### Benefício
 
-Reduz o impacto potencial de um problema.
+&emsp;Reduz o impacto potencial de um problema.
 
-------------------------------------------------------------------------
+---
 
-# 41. Blue-Green Deployment
+# 38. Blue-Green Deployment
 
-Mantemos dois ambientes:
+&emsp;Mantemos dois ambientes:
 
-``` text
+```text
 Blue  → versão atual
 Green → versão nova
 ```
 
-Depois de validar o novo ambiente, o tráfego pode ser direcionado para
-ele.
+&emsp;Depois de validar o novo ambiente, o tráfego pode ser direcionado para ele.
 
 ### Benefício
 
-Facilita trocas controladas e rollback.
+&emsp;Facilita trocas controladas e rollback.
 
-------------------------------------------------------------------------
+---
 
-# 42. Observabilidade
+# 39. Observabilidade
 
-Observabilidade é a capacidade de entender o comportamento do sistema a
-partir dos sinais que ele produz.
+&emsp;Observabilidade é a capacidade de entender o comportamento do sistema a partir dos sinais que ele produz.
 
-Em ML podemos observar:
+&emsp;Em ML podemos observar:
 
--   latência;
--   erros;
--   número de requisições;
--   distribuição das features;
--   qualidade dos dados;
--   métricas do modelo;
--   drift.
+- latência;
+- erros;
+- número de requisições;
+- distribuição das features;
+- qualidade dos dados;
+- métricas do modelo;
+- drift.
 
-Uma API pode estar tecnicamente saudável e ainda assim produzir
-previsões ruins.
+&emsp;Uma API pode estar tecnicamente saudável e ainda assim produzir previsões ruins.
 
-------------------------------------------------------------------------
+---
 
-# 43. Healthcheck x monitoramento do modelo
+# 40. Healthcheck x monitoramento do modelo
 
-São coisas diferentes.
+&emsp;São coisas diferentes.
 
 ### Healthcheck
 
-Pergunta:
+&emsp;Pergunta:
 
 > O serviço está funcionando?
 
 ### Monitoramento de ML
 
-Pergunta:
+&emsp;Pergunta:
 
 > O modelo continua se comportando de forma adequada?
 
-É possível ter:
+&emsp;É possível ter:
 
-``` text
+```text
 Healthcheck → OK
 ```
 
-e simultaneamente:
+&emsp;e simultaneamente:
 
-``` text
+```text
 Drift → alto
 ```
 
-Por isso os dois são necessários.
+&emsp;Por isso os dois são necessários.
 
-------------------------------------------------------------------------
+&emsp;Isso pode acontecer, por exemplo, quando:
 
-# 44. Data Drift
+```text
+HTTP 200
+CPU normal
+Memória normal
+Container saudável
 
-Data Drift ocorre quando a distribuição dos dados observados em produção
-muda em relação à referência.
+↓
 
-Por exemplo:
+qualidade das previsões ↓
+```
 
-``` text
+&emsp;Esse é um dos motivos pelos quais monitorar apenas a infraestrutura não é suficiente para ML.
+
+---
+
+# 41. Data Drift
+
+&emsp;Data Drift ocorre quando a distribuição dos dados observados em produção muda em relação à referência. Por exemplo:
+
+```text
 Treinamento
+
 idade média = 35
 ```
 
-Depois:
+&emsp;Depois:
 
-``` text
+```text
 Produção
+
 idade média = 55
 ```
 
-A API pode continuar funcionando normalmente, mas o contexto dos dados
-mudou.
+&emsp;A API pode continuar funcionando normalmente, mas o contexto dos dados mudou.
 
-------------------------------------------------------------------------
+---
 
-# 45. Concept Drift
+# 42. Concept Drift
 
-Data Drift e Concept Drift não são a mesma coisa.
+&emsp;Data Drift e Concept Drift não são a mesma coisa.
 
 ### Data Drift
 
-Mudança na distribuição das entradas:
+&emsp;Mudança na distribuição das entradas:
 
-``` text
+```text
 P(X) muda
 ```
 
 ### Concept Drift
 
-Mudança na relação entre entrada e resultado:
+&emsp;Mudança na relação entre entrada e resultado:
 
-``` text
+```text
 P(Y|X) muda
 ```
 
-Por exemplo, o mesmo perfil de cliente pode passar a ter uma
-probabilidade diferente de inadimplência devido a uma mudança econômica.
+&emsp;Por exemplo, o mesmo perfil de cliente pode passar a ter uma probabilidade diferente de inadimplência devido a uma mudança econômica.
 
-------------------------------------------------------------------------
+---
 
-# 46. Por que drift é perigoso?
+# 43. Teste Kolmogorov-Smirnov
 
-Um sistema pode estar:
+&emsp;O teste **KS** pode comparar duas distribuições.
 
-``` text
-HTTP 200
-CPU normal
-Memória normal
-Container saudável
-```
+&emsp;A estatística apresentada é:
 
-e mesmo assim:
-
-``` text
-qualidade das previsões ↓
-```
-
-Esse é o motivo de monitoramento de infraestrutura não ser suficiente
-para ML.
-
-------------------------------------------------------------------------
-
-# 47. Teste Kolmogorov-Smirnov
-
-O teste **KS** pode comparar duas distribuições.
-
-A estatística apresentada é:
-
-``` text
+```text
 D = sup |F_ref(x) - F_prod(x)|
 ```
 
-De maneira intuitiva:
+&emsp;De maneira intuitiva:
 
-> Quanto maior a diferença entre as distribuições acumuladas, maior a
-> evidência de que elas não são iguais.
+> Quanto maior a diferença entre as distribuições acumuladas, maior a evidência de que elas não são iguais.
 
-É especialmente útil para comparar distribuições de variáveis numéricas.
+&emsp;É especialmente útil para comparar distribuições de variáveis numéricas.
 
-------------------------------------------------------------------------
+---
 
-# 48. PSI --- Population Stability Index
+# 44. PSI — Population Stability Index
 
-O PSI é muito utilizado em cenários de risco e crédito.
+&emsp;O PSI é muito utilizado em cenários de risco e crédito.
 
-Uma forma de representá-lo é:
+&emsp;Uma forma de representá-lo é:
 
-``` text
+```text
 PSI = Σ (P - Q) × ln(P / Q)
 ```
 
-Ele compara a proporção observada em determinadas faixas com a proporção
-de referência.
+&emsp;Ele compara a proporção observada em determinadas faixas com a proporção de referência.
 
-O material apresenta a seguinte régua:
+&emsp;O material apresenta a seguinte referência:
 
-  PSI             Interpretação
-  --------------- -----------------------
-  `< 0,10`        Estável
-  `0,10 – 0,25`   Mudança moderada
-  `>= 0,25`       Mudança significativa
+| PSI           | Interpretação         |
+| ------------- | --------------------- |
+| `< 0,10`      | Estável               |
+| `0,10 – 0,25` | Mudança moderada      |
+| `>= 0,25`     | Mudança significativa |
 
-Esses valores são referências e devem ser interpretados de acordo com o
-contexto do modelo.
+&emsp;Esses valores são referências e devem ser interpretados de acordo com o contexto do modelo.
 
-------------------------------------------------------------------------
+---
 
-# 49. KL Divergence
+# 45. KL Divergence
 
-A **Divergência de Kullback-Leibler** mede a diferença entre uma
-distribuição e uma referência.
+&emsp;A **Divergência de Kullback-Leibler** mede a diferença entre uma distribuição e uma referência.
 
-A fórmula apresentada no material é:
+&emsp;A fórmula apresentada no material é:
 
-``` text
+```text
 D_KL(P || Q) = ∫ p(x) log(p(x) / q(x)) dx
 ```
 
-O importante é entender o propósito:
+&emsp;O importante é entender o propósito:
 
-> Medir quão diferente uma distribuição está em relação a outra segundo
-> essa medida.
+> Medir quão diferente uma distribuição está em relação a outra segundo essa medida.
 
-------------------------------------------------------------------------
+---
 
-# 50. KS x PSI x KL
+# 46. KS x PSI x KL
 
-  -----------------------------------------------------------------------
-  Técnica                 Ideia                   Uso
-  ----------------------- ----------------------- -----------------------
-  KS                      Distância entre         Comparação estatística
-                          distribuições           
-                          acumuladas              
+| Técnica | Ideia                                    | Uso                       |
+| ------- | ---------------------------------------- | ------------------------- |
+| KS      | Distância entre distribuições acumuladas | Comparação estatística    |
+| PSI     | Diferença entre proporções em bins       | Estabilidade populacional |
+| KL      | Divergência entre distribuições          | Diferença informacional   |
 
-  PSI                     Diferença entre         Estabilidade
-                          proporções em bins      populacional
+&emsp;O ponto principal não é decorar fórmulas isoladas.
 
-  KL                      Divergência entre       Diferença informacional
-                          distribuições           
-  -----------------------------------------------------------------------
+&emsp;É saber que são ferramentas para investigar **mudanças na distribuição dos dados**.
 
-O ponto principal não é decorar fórmulas isoladas.
+---
 
-É saber que são ferramentas para investigar **mudanças na distribuição
-dos dados**.
+# 47. Drift não significa automaticamente modelo ruim
 
-------------------------------------------------------------------------
+&emsp;Se houve drift:
 
-# 51. Drift não significa automaticamente modelo ruim
-
-Se houve drift:
-
-``` text
+```text
 Os dados mudaram.
 ```
 
-Isso não significa automaticamente:
+&emsp;Isso não significa automaticamente:
 
-``` text
+```text
 O modelo está inútil.
 ```
 
-É necessário investigar:
+&emsp;É necessário investigar:
 
--   magnitude da mudança;
--   quais features mudaram;
--   impacto nas métricas;
--   contexto de negócio;
--   duração da mudança;
--   possibilidade de mudança temporária.
+- magnitude da mudança;
+- quais features mudaram;
+- impacto nas métricas;
+- contexto de negócio;
+- duração da mudança;
+- possibilidade de mudança temporária.
 
-------------------------------------------------------------------------
+---
 
-# 52. CI/CD para Machine Learning
+# 48. CI/CD para Machine Learning
 
-Em software:
+&emsp;Em software:
 
-``` text
+```text
 Código
- ↓
+↓
 Teste
- ↓
+↓
 Build
- ↓
+↓
 Deploy
 ```
 
-Em ML:
+&emsp;Em ML:
 
-``` text
+```text
 Código
 +
 Dados
 +
 Modelo
- ↓
+↓
 Testes
- ↓
+↓
 Validação
- ↓
+↓
 Build
- ↓
+↓
 Deploy
 ```
 
-Além dos testes tradicionais, podem existir critérios relacionados às
-métricas do modelo.
+&emsp;Além dos testes tradicionais, podem existir critérios relacionados às métricas do modelo.
 
-------------------------------------------------------------------------
+---
 
-# 53. Quality Gates
+# 49. Quality Gates
 
-Um **quality gate** é uma condição que precisa ser satisfeita para o
-pipeline continuar.
+&emsp;Um **quality gate** é uma condição que precisa ser satisfeita para o pipeline continuar. Exemplo:
 
-Exemplo:
-
-``` text
+```text
 F1 >= 0,80
 ```
 
-Se o modelo candidato não satisfizer a condição:
+&emsp;Se o modelo candidato não satisfizer a condição:
 
-``` text
+```text
 Validação
- ↓
+↓
 Falha
- ↓
+↓
 Deploy bloqueado
 ```
 
 ### Benefício
 
-Evita que uma regressão conhecida avance automaticamente para produção.
+&emsp;Evita que uma regressão conhecida avance automaticamente para produção.
 
-------------------------------------------------------------------------
+---
 
-# 54. Docker + CI/CD
+# 50. Diagnóstico de uma API de ML
 
-Docker padroniza o ambiente.
+&emsp;Quando uma API não funciona, investigue por camadas:
 
-CI/CD automatiza o processo.
-
-Juntos:
-
-``` text
-Código
- ↓
-Testes
- ↓
-Build da imagem
- ↓
-Imagem versionada
- ↓
-Deploy
-```
-
-Isso reduz configuração manual e aumenta a reprodutibilidade.
-
-------------------------------------------------------------------------
-
-# 55. Health Check
-
-Um processo pode estar ativo e ainda não estar pronto.
-
-Um endpoint como:
-
-``` text
-GET /health
-```
-
-pode indicar se o serviço está funcionando corretamente.
-
-Isso pode ser usado pela infraestrutura para verificar saúde e tomar
-ações automáticas.
-
-------------------------------------------------------------------------
-
-# 56. Contratos de entrada e saída
-
-Uma API de ML precisa definir:
-
-``` text
-Entrada
- ↓
-Processamento
- ↓
-Saída
-```
-
-Exemplo:
-
-``` json
-{
-  "customer_id": "123",
-  "age": 30,
-  "annual_income": 80000,
-  "credit_score": 720
-}
-```
-
-O contrato permite que o sistema consumidor saiba exatamente o que deve
-enviar e o que receber.
-
-------------------------------------------------------------------------
-
-# 57. Diagnóstico de uma API de ML
-
-Quando uma API não funciona, investigue por camadas:
-
-``` text
+```text
 1. Container está rodando?
-        ↓
+↓
 2. Processo iniciou?
-        ↓
+↓
 3. Porta está correta?
-        ↓
+↓
 4. API responde?
-        ↓
+↓
 5. Entrada é válida?
-        ↓
+↓
 6. Modelo foi carregado?
-        ↓
+↓
 7. Pré-processamento funciona?
-        ↓
+↓
 8. Predição funciona?
-        ↓
+↓
 9. Métricas continuam adequadas?
 ```
 
-Isso é melhor do que alterar várias partes simultaneamente.
+&emsp;Isso é melhor do que alterar várias partes simultaneamente.
 
-------------------------------------------------------------------------
+---
 
-# 58. Logs
+# 51. Logs
 
-Logs são uma das primeiras fontes de evidência.
+&emsp;Logs são uma das primeiras fontes de evidência. Procure por:
 
-Procure por:
+- erros de import;
+- arquivo não encontrado;
+- modelo não carregado;
+- erro de porta;
+- erro de validação;
+- exceções durante inferência.
 
--   erros de import;
--   arquivo não encontrado;
--   modelo não carregado;
--   erro de porta;
--   erro de validação;
--   exceções durante inferência.
+&emsp;No Docker:
 
-No Docker:
-
-``` bash
+```bash
 docker logs nome-do-container
 ```
 
-------------------------------------------------------------------------
+---
 
-# 59. Feature Store
+# 52. Feature Store
 
-Uma **Feature Store** centraliza features utilizadas por modelos.
+&emsp;Uma **Feature Store** centraliza features utilizadas por modelos. Pode existir:
 
-Pode existir:
-
-``` text
+```text
 Offline Store
- ↓
+↓
 Treinamento
 
 Online Store
- ↓
+↓
 Inferência em tempo real
 ```
 
 ### Por que usar?
 
-Para evitar que uma feature seja calculada de uma maneira durante o
-treinamento e de outra durante a inferência.
+&emsp;Para evitar que uma feature seja calculada de uma maneira durante o treinamento e de outra durante a inferência.
 
-Esse problema é conhecido como inconsistência entre treino e serving.
+&emsp;Esse problema é conhecido como inconsistência entre treino e serving.
 
-------------------------------------------------------------------------
+---
 
-# 60. Orquestração distribuída
+# 53. Orquestração distribuída
 
-Quando o treinamento cresce, uma única máquina pode não ser suficiente.
+&emsp;Quando o treinamento cresce, uma única máquina pode não ser suficiente.
 
-O material cita ferramentas como:
+&emsp;O material cita ferramentas como:
 
--   Ray;
--   Kubeflow Pipelines.
+- Ray;
+- Kubeflow Pipelines.
 
-A ideia é:
+&emsp;A ideia é:
 
-``` text
+```text
 Problema grande
- ↓
+↓
 Distribuição
- ↓
+↓
 Vários recursos
- ↓
+↓
 Execução coordenada
 ```
 
-Isso permite escalar treinamento e pipelines.
+&emsp;Isso permite escalar treinamento e pipelines.
 
-------------------------------------------------------------------------
+---
 
-# 61. Edge Computing e TinyML
+# 54. Edge Computing e TinyML
 
-Nem todo modelo precisa executar em um servidor.
+&emsp;Nem todo modelo precisa executar em um servidor. Alguns cenários exigem execução em:
 
-Alguns cenários exigem execução em:
+- celulares;
+- IoT;
+- veículos;
+- equipamentos industriais.
 
--   celulares;
--   IoT;
--   veículos;
--   equipamentos industriais.
+&emsp;Nesses casos, latência, memória e energia podem ser críticos.
 
-Nesses casos, latência, memória e energia podem ser críticos.
+&emsp;Por isso existem técnicas específicas de otimização e inferência na borda.
 
-Por isso existem técnicas específicas de otimização e inferência na
-borda.
+---
 
-------------------------------------------------------------------------
+# 55. ONNX
 
-# 62. ONNX
+&emsp;ONNX é um formato para representar modelos de Machine Learning de maneira interoperável.
 
-ONNX é um formato para representar modelos de Machine Learning de
-maneira interoperável.
+&emsp;A ideia é facilitar a execução de modelos em ambientes diferentes daqueles utilizados no treinamento.
 
-A ideia é facilitar a execução de modelos em ambientes diferentes
-daqueles utilizados no treinamento.
+&emsp;O ONNX Runtime pode ser utilizado para inferência otimizada.
 
-O ONNX Runtime pode ser utilizado para inferência otimizada.
+---
 
-------------------------------------------------------------------------
+# 56. Quantização
 
-# 63. Quantização
+&emsp;Quantização reduz a precisão numérica dos pesos. Por exemplo:
 
-Quantização reduz a precisão numérica dos pesos.
-
-Por exemplo:
-
-``` text
+```text
 FP32 → FP16
 ```
 
-ou:
+&emsp;ou:
 
-``` text
+```text
 FP32 → INT8
 ```
 
-Pode reduzir:
+&emsp;Pode reduzir:
 
--   memória;
--   tamanho do modelo;
--   custo computacional.
+- memória;
+- tamanho do modelo;
+- custo computacional.
 
-Mas existe um trade-off:
+&emsp;Mas existe um trade-off:
 
-``` text
+```text
 menor precisão numérica
-        ↓
+↓
 possível perda de qualidade
 ```
 
-Por isso a técnica precisa ser validada no modelo real.
+&emsp;Por isso a técnica precisa ser validada no modelo real.
 
-------------------------------------------------------------------------
+---
 
-# 64. Governança
+# 57. Governança
 
-Quando um modelo influencia decisões reais, não basta saber sua
-acurácia.
+&emsp;Quando um modelo influencia decisões reais, não basta saber sua acurácia.
 
-Também precisamos saber:
+&emsp;Também precisamos saber:
 
--   para que foi criado;
--   onde pode ser usado;
--   quais são suas limitações;
--   como foi avaliado;
--   quais dados utiliza;
--   quais grupos foram considerados.
+- para que foi criado;
+- onde pode ser usado;
+- quais são suas limitações;
+- como foi avaliado;
+- quais dados utiliza;
+- quais grupos foram considerados.
 
-Isso faz parte da governança de Machine Learning.
+&emsp;Isso faz parte da governança de Machine Learning.
 
-------------------------------------------------------------------------
+---
 
-# 65. Model Cards
+# 58. Model Cards
 
-Model Cards são documentos utilizados para registrar informações
-importantes sobre modelos.
+&emsp;Model Cards são documentos utilizados para registrar informações importantes sobre modelos. Podem incluir:
 
-Podem incluir:
-
--   objetivo;
--   contexto;
--   limitações;
--   métricas;
--   dados;
--   possíveis vieses;
--   grupos avaliados.
+- objetivo;
+- contexto;
+- limitações;
+- métricas;
+- dados;
+- possíveis vieses;
+- grupos avaliados.
 
 ### Benefícios
 
--   transparência;
--   documentação;
--   auditabilidade;
--   comunicação das limitações.
+- transparência;
+- documentação;
+- auditabilidade;
+- comunicação das limitações.
 
-------------------------------------------------------------------------
+---
 
-# 66. Fairness e viés
+# 59. Fairness e viés
 
-Uma métrica média pode esconder diferenças entre grupos.
+&emsp;Uma métrica média pode esconder diferenças entre grupos. Dependendo do contexto, pode ser necessário avaliar:
 
-Dependendo do contexto, pode ser necessário avaliar:
+- desempenho por grupo;
+- diferenças de erro;
+- métricas de equidade;
+- impacto das decisões.
 
--   desempenho por grupo;
--   diferenças de erro;
--   métricas de equidade;
--   impacto das decisões.
+&emsp;Ferramentas como Fairlearn e AI Fairness 360 são exemplos de recursos para esse tipo de análise.
 
-Ferramentas como Fairlearn e AI Fairness 360 são exemplos de recursos
-para esse tipo de análise.
+---
 
-------------------------------------------------------------------------
+# 60. Privacidade e LGPD
 
-# 67. Privacidade e LGPD
+&emsp;Sistemas de ML que usam dados pessoais também precisam considerar:
 
-Sistemas de ML que usam dados pessoais também precisam considerar:
+- quais dados são coletados;
+- por que são usados;
+- quem possui acesso;
+- como são armazenados;
+- por quanto tempo;
+- como são protegidos.
 
--   quais dados são coletados;
--   por que são usados;
--   quem possui acesso;
--   como são armazenados;
--   por quanto tempo;
--   como são protegidos.
+&emsp;MLOps não resolve sozinho essas questões, mas uma arquitetura profissional precisa incluí-las.
 
-MLOps não resolve sozinho essas questões, mas uma arquitetura
-profissional precisa incluí-las.
+---
 
-------------------------------------------------------------------------
+# 61. Rastreabilidade
 
-# 68. O ciclo de atualização de um modelo
-
-Imagine:
-
-``` text
-Modelo 1.0
-```
-
-em produção.
-
-Surge:
-
-``` text
-Modelo 2.0
-```
-
-Um processo maduro pode ser:
-
-``` text
-Modelo 2.0
- ↓
-Testes
- ↓
-Avaliação
- ↓
-Registro
- ↓
-Challenger
- ↓
-Comparação
- ↓
-Deploy controlado
- ↓
-Monitoramento
-```
-
-Isso é muito mais seguro do que simplesmente substituir um arquivo
-`.pkl`.
-
-------------------------------------------------------------------------
-
-# 69. Rastreabilidade
-
-Rastreabilidade significa conseguir responder:
+&emsp;Rastreabilidade significa conseguir responder:
 
 > De onde veio este modelo?
 
-Podemos ter:
+&emsp;Podemos ter:
 
-``` text
+```text
 Modelo v2.1
- ↓
+↓
 Run 184
- ↓
+↓
 Dataset v7
- ↓
+↓
 Commit abc123
- ↓
+↓
 Hiperparâmetros X
- ↓
+↓
 Métricas Y
 ```
 
 ### Benefícios
 
--   debugging;
--   auditoria;
--   rollback;
--   comparação;
--   manutenção.
+- debugging;
+- auditoria;
+- rollback;
+- comparação;
+- manutenção.
 
-------------------------------------------------------------------------
+---
 
-# 70. Reprodutibilidade
+# 62. Reprodutibilidade
 
-Idealmente:
+&emsp;Idealmente:
 
-``` text
+```text
 Código X
 +
 Dados Y
@@ -1940,172 +1633,145 @@ Dados Y
 Hiperparâmetros Z
 +
 Ambiente W
- ↓
+↓
 Modelo M
 ```
 
-Se esses elementos estiverem registrados, o resultado pode ser
-reconstruído ou investigado.
+&emsp;Se esses elementos estiverem registrados, o resultado pode ser reconstruído ou investigado.
 
-------------------------------------------------------------------------
+---
 
-# 71. Rollback
+# 63. Rollback
 
-Se uma versão nova apresentar problema:
+&emsp;Se uma versão nova apresentar problema:
 
-``` text
+```text
 v2.1
- ↓
+↓
 problema
- ↓
+↓
 rollback
- ↓
+↓
 v2.0
 ```
 
-Isso só é possível de maneira confiável se as versões anteriores
-estiverem identificadas e disponíveis.
+&emsp;Isso só é possível de maneira confiável se as versões anteriores estiverem identificadas e disponíveis.
 
-------------------------------------------------------------------------
+---
 
-# 72. Por que versões importam?
+# 64. Como todas as ferramentas se conectam
 
-Evite depender apenas de:
+| Problema     | Ferramenta/conceito | O que resolve          |
+| ------------ | ------------------- | ---------------------- |
+| Código       | Git                 | Versionamento          |
+| Dados        | DVC                 | Versionamento de dados |
+| Experimentos | MLflow              | Rastreamento           |
+| Modelos      | Model Registry      | Versões e estágios     |
+| API          | FastAPI             | Serving                |
+| Contratos    | Pydantic            | Validação              |
+| Ambiente     | Docker              | Empacotamento          |
+| Entrega      | CI/CD               | Automação              |
+| Saúde        | Healthcheck         | Verificação do serviço |
+| Drift        | KS / PSI / KL       | Mudanças estatísticas  |
+| Features     | Feature Store       | Centralização          |
+| Governança   | Model Cards         | Documentação           |
 
-``` text
-latest
+---
+
+# 65. O ciclo completo de MLOps
+
+&emsp;O modelo mental mais importante é:
+
+```text
+DADOS
+↓
+Preparação
+↓
+Treinamento
+↓
+Validação
+↓
+Model Registry
+↓
+CI/CD
+↓
+Docker
+↓
+Deploy
+↓
+API / Serving
+↓
+Usuários
+↓
+Observabilidade
+↓
+Drift
+↓
+Retreinamento
+↓
+Novo modelo
+│
+└──────────────► novo ciclo
 ```
 
-Quando controle de release é importante, versões explícitas ajudam:
+---
 
-``` text
-model-api:1.0
-model-api:1.1
-model-api:2.0
-```
+# 66. Roadmap e ordem de estudo
 
-Isso facilita:
+&emsp;O material propõe uma sequência de laboratórios.
 
--   identificação;
--   reprodução;
--   rollback;
--   auditoria.
+## Lab 1 — DVC + Git
 
-------------------------------------------------------------------------
+&emsp;Aprender:
 
-## 73. Como todas as ferramentas se conectam
-
-| Problema | Ferramenta/conceito | O que resolve |
-|---|---|---|
-| Código | Git | Versionamento |
-| Dados | DVC | Versionamento de dados |
-| Experimentos | MLflow | Rastreamento |
-| Modelos | Model Registry | Versões e estágios |
-| API | FastAPI | Serving |
-| Contratos | Pydantic | Validação |
-| Ambiente | Docker | Empacotamento |
-| Entrega | CI/CD | Automação |
-| Saúde | Healthcheck | Verificação do serviço |
-| Drift | KS / PSI / KL | Mudanças estatísticas |
-| Features | Feature Store | Centralização |
-| Governança | Model Cards | Documentação |
-
-------------------------------------------------------------------------
-
-# 74. O ciclo completo de MLOps
-
-O modelo mental mais importante é:
-
-``` text
-             DADOS
-               ↓
-          Preparação
-               ↓
-          Treinamento
-               ↓
-           Validação
-               ↓
-         Model Registry
-               ↓
-             CI/CD
-               ↓
-            Docker
-               ↓
-            Deploy
-               ↓
-          API / Serving
-               ↓
-            Usuários
-               ↓
-        Observabilidade
-               ↓
-             Drift
-               ↓
-        Retreinamento
-               ↓
-          Novo modelo
-               │
-               └──────────────► novo ciclo
-```
-
-------------------------------------------------------------------------
-
-# 75. Roadmap prático de estudo
-
-O material propõe uma sequência de laboratórios.
-
-## Lab 1 --- DVC + Git
-
-Aprender:
-
-``` text
+```text
 Código → Git
 Dados → DVC
 ```
 
-Objetivo: reprodutibilidade.
+&emsp;Objetivo: reprodutibilidade.
 
-## Lab 2 --- MLflow
+## Lab 2 — MLflow
 
-Aprender:
+&emsp;Aprender:
 
-``` text
+```text
 Experiment Tracking
 +
 Model Registry
 ```
 
-Objetivo: rastrear experimentos e modelos.
+&emsp;Objetivo: rastrear experimentos e modelos.
 
-## Lab 3 --- CI/CD
+## Lab 3 — CI/CD
 
-Aprender:
+&emsp;Aprender:
 
-``` text
+```text
 Testes
 +
 Quality Gates
 ```
 
-Objetivo: impedir que versões inadequadas avancem.
+&emsp;Objetivo: impedir que versões inadequadas avancem.
 
-## Lab 4 --- Docker + FastAPI
+## Lab 4 — Docker + FastAPI
 
-Aprender:
+&emsp;Aprender:
 
-``` text
+```text
 Serving
 +
 Containerização
 ```
 
-Objetivo: empacotar e disponibilizar o modelo.
+&emsp;Objetivo: empacotar e disponibilizar o modelo.
 
-## Lab 5 --- Drift + Observabilidade
+## Lab 5 — Drift + Observabilidade
 
-Aprender:
+&emsp;Aprender:
 
-``` text
+```text
 Monitoramento
 +
 KS / PSI
@@ -2113,17 +1779,11 @@ KS / PSI
 Alertas
 ```
 
-Objetivo: detectar mudanças nos dados.
+&emsp;Objetivo: detectar mudanças nos dados.
 
-------------------------------------------------------------------------
+&emsp;Uma ordem lógica para executar esses estudos é:
 
-# 76. Ordem ideal para estudar
-
-Não é necessário decorar todas as ferramentas ao mesmo tempo.
-
-Uma ordem lógica é:
-
-``` text
+```text
 1. Entender ML em produção
         ↓
 2. Entender containers
@@ -2145,368 +1805,163 @@ Uma ordem lógica é:
 10. Automatizar retreinamento
 ```
 
-Cada etapa resolve um problema que aparece naturalmente depois da
-anterior.
+&emsp;Cada etapa resolve um problema que aparece naturalmente depois da anterior.
 
-------------------------------------------------------------------------
+---
 
-# 77. Mapa mental
-
-``` text
-                    MACHINE LEARNING
-                           │
-                           ▼
-                  Modelo em produção
-                           │
-            ┌──────────────┼──────────────┐
-            │              │              │
-          Dados          Código         Modelo
-            │              │              │
-           DVC            Git        MLflow/Registry
-            │              │              │
-            └──────────────┼──────────────┘
-                           ↓
-                         MLOps
-                           │
-        ┌──────────────────┼──────────────────┐
-        │                  │                  │
-     Serving             CI/CD          Observabilidade
-        │                  │                  │
-     FastAPI             Testes             Drift
-        │                  │                  │
-      Docker          Quality Gates      KS / PSI / KL
-        │                  │                  │
-        └──────────────────┼──────────────────┘
-                           ↓
-                     Retreinamento
-                           ↓
-                       Challenger
-                           ↓
-                         Deploy
-                           ↓
-                      Novo ciclo
-```
-
-------------------------------------------------------------------------
-
-# 78. Checklist para prova
+# 67. Checklist para prova
 
 ## Fundamentos
 
--   [ ] Por que ML em produção é diferente de um notebook?
--   [ ] Por que existe o problema "funciona na minha máquina"?
--   [ ] Qual a relação entre código, dados e hiperparâmetros?
--   [ ] Qual a diferença entre bare-metal, VM e container?
--   [ ] Por que containers são mais leves?
--   [ ] O que são namespaces?
--   [ ] O que são cgroups?
--   [ ] Qual a diferença entre visão e controle de recursos?
+- [ ] Por que ML em produção é diferente de um notebook?
+- [ ] Por que existe o problema "funciona na minha máquina"?
+- [ ] Qual a relação entre código, dados e hiperparâmetros?
+- [ ] Qual a diferença entre bare-metal, VM e container?
+- [ ] Por que containers são mais leves?
+- [ ] O que são namespaces?
+- [ ] O que são cgroups?
+- [ ] Qual a diferença entre visão e controle de recursos?
 
 ## Docker
 
--   [ ] O que é uma imagem?
--   [ ] O que é um container?
--   [ ] O que é um registry?
--   [ ] Por que imagens possuem camadas?
--   [ ] Para que serve Dockerfile?
--   [ ] Qual a diferença entre `FROM`, `RUN`, `COPY` e `CMD`?
--   [ ] Por que a ordem do Dockerfile influencia o cache?
--   [ ] O que é multi-stage build?
--   [ ] Por que usar usuário não-root?
--   [ ] O que `EXPOSE` faz?
+- [ ] O que é uma imagem?
+- [ ] O que é um container?
+- [ ] O que é um registry?
+- [ ] Por que imagens possuem camadas?
+- [ ] Para que serve Dockerfile?
+- [ ] Qual a diferença entre `FROM`, `RUN`, `COPY` e `CMD`?
+- [ ] Por que a ordem do Dockerfile influencia o cache?
+- [ ] O que é multi-stage build?
+- [ ] Por que usar usuário não-root?
+- [ ] O que `EXPOSE` faz?
 
 ## Serving
 
--   [ ] O que é model serving?
--   [ ] Para que serve FastAPI?
--   [ ] Por que validar entradas?
--   [ ] Qual o papel do Pydantic?
--   [ ] Por que o pré-processamento precisa ser consistente?
--   [ ] O que é healthcheck?
+- [ ] O que é model serving?
+- [ ] Para que serve FastAPI?
+- [ ] Por que validar entradas?
+- [ ] Qual o papel do Pydantic?
+- [ ] Por que o pré-processamento precisa ser consistente?
+- [ ] O que é healthcheck?
 
 ## MLOps
 
--   [ ] O que é MLOps?
--   [ ] O que é CD4ML?
--   [ ] Por que Git é importante?
--   [ ] Por que DVC pode ser usado?
--   [ ] Para que serve MLflow?
--   [ ] O que é Model Registry?
--   [ ] Quais são os níveis de maturidade?
--   [ ] O que são Champion e Challenger?
--   [ ] O que é Shadow Deployment?
--   [ ] O que é Canary?
--   [ ] O que é Blue-Green?
+- [ ] O que é MLOps?
+- [ ] O que é CD4ML?
+- [ ] Por que Git é importante?
+- [ ] Por que DVC pode ser usado?
+- [ ] Para que serve MLflow?
+- [ ] O que é Model Registry?
+- [ ] Quais são os níveis de maturidade?
+- [ ] O que são Champion e Challenger?
+- [ ] O que é Shadow Deployment?
+- [ ] O que é Canary?
+- [ ] O que é Blue-Green?
 
 ## Observabilidade
 
--   [ ] O que é Data Drift?
--   [ ] O que é Concept Drift?
--   [ ] Qual a diferença?
--   [ ] O que KS mede?
--   [ ] O que é PSI?
--   [ ] O que é KL Divergence?
--   [ ] Por que uma API pode estar saudável e o modelo estar ruim?
+- [ ] O que é Data Drift?
+- [ ] O que é Concept Drift?
+- [ ] Qual a diferença?
+- [ ] O que KS mede?
+- [ ] O que é PSI?
+- [ ] O que é KL Divergence?
+- [ ] Por que uma API pode estar saudável e o modelo estar ruim?
 
 ## Produção
 
--   [ ] O que é dívida técnica em ML?
--   [ ] O que é Boundary Erosion?
--   [ ] O que são Pipeline Jungles?
--   [ ] O que é Glue Code?
--   [ ] O que é Data Testing Debt?
--   [ ] Por que versionar dados, código e modelos?
--   [ ] Por que rollback é importante?
--   [ ] O que são Model Cards?
--   [ ] Por que governança e fairness importam?
+- [ ] O que é dívida técnica em ML?
+- [ ] O que é Boundary Erosion?
+- [ ] O que são Pipeline Jungles?
+- [ ] O que é Glue Code?
+- [ ] O que é Data Testing Debt?
+- [ ] Por que versionar dados, código e modelos?
+- [ ] Por que rollback é importante?
+- [ ] O que são Model Cards?
+- [ ] Por que governança e fairness importam?
 
-------------------------------------------------------------------------
+---
 
-# 79. Diferenças que você precisa saber
+# 68. Diferenças que você precisa saber
 
-  -----------------------------------------------------------------------
-  Conceito A              Conceito B              Diferença
-  ----------------------- ----------------------- -----------------------
-  VM                      Container               VM virtualiza uma
-                                                  máquina; container
-                                                  isola processos
+| Conceito A  | Conceito B       | Diferença                                                  |
+| ----------- | ---------------- | ---------------------------------------------------------- |
+| VM          | Container        | VM virtualiza uma máquina; container isola processos       |
+| Namespace   | cgroup           | Namespace controla visão; cgroup controla recursos         |
+| Imagem      | Container        | Imagem é modelo; container é execução                      |
+| Dockerfile  | Compose          | Dockerfile constrói imagem; Compose organiza serviços      |
+| Git         | DVC              | Git versiona código; DVC ajuda a versionar dados           |
+| MLflow      | Model Registry   | MLflow rastreia experimentos; Registry organiza modelos    |
+| Data Drift  | Concept Drift    | Mudança em `P(X)` vs. mudança em `P(Y\|X)`                 |
+| Healthcheck | Drift monitoring | Saúde técnica vs. comportamento estatístico                |
+| Champion    | Challenger       | Modelo atual vs. candidato                                 |
+| Shadow      | Canary           | Shadow observa sem decidir; Canary recebe parte do tráfego |
+| CI          | CD               | Integração/testes vs. entrega/deploy                       |
 
-  Namespace               cgroup                  Namespace controla
-                                                  visão; cgroup controla
-                                                  recursos
+---
 
-  Imagem                  Container               Imagem é modelo;
-                                                  container é execução
+# 69. O modelo mental definitivo
 
-  Dockerfile              Compose                 Dockerfile constrói
-                                                  imagem; Compose
-                                                  organiza serviços
+&emsp;Se você precisar guardar apenas uma sequência, pense:
 
-  Git                     DVC                     Git versiona código;
-                                                  DVC ajuda a versionar
-                                                  dados
-
-  MLflow                  Model Registry          MLflow rastreia
-                                                  experimentos; Registry
-                                                  organiza modelos
-
-  Data Drift              Concept Drift           Mudança em `P(X)`
-                                                  vs. mudança em
-                                                  `P(Y\|X)`
-
-  Healthcheck             Drift monitoring        Saúde técnica
-                                                  vs. comportamento
-                                                  estatístico
-
-  Champion                Challenger              Modelo atual
-                                                  vs. candidato
-
-  Shadow                  Canary                  Shadow observa sem
-                                                  decidir; Canary recebe
-                                                  parte do tráfego
-
-  CI                      CD                      Integração/testes
-                                                  vs. entrega/deploy
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-# 80. Resumo em uma frase
-
-**Container:** empacota e isola a execução.
-
-**Imagem:** modelo usado para criar containers.
-
-**Dockerfile:** receita de construção da imagem.
-
-**Namespaces:** controlam a visão do processo.
-
-**cgroups:** controlam recursos.
-
-**MLOps:** engenharia do ciclo de vida de ML em produção.
-
-**DVC:** ajuda a versionar dados.
-
-**MLflow:** registra experimentos e modelos.
-
-**Model Registry:** organiza versões e estágios.
-
-**FastAPI:** disponibiliza o modelo como API.
-
-**Pydantic:** valida dados.
-
-**CI/CD:** automatiza testes e entrega.
-
-**Observabilidade:** acompanha o comportamento do sistema.
-
-**Data Drift:** mudança na distribuição das entradas.
-
-**Concept Drift:** mudança na relação entre entradas e resultados.
-
-**KS:** compara distribuições.
-
-**PSI:** mede estabilidade populacional.
-
-**KL:** mede divergência entre distribuições.
-
-**Champion:** modelo atual.
-
-**Challenger:** modelo candidato.
-
-**Shadow:** testa o candidato sem usá-lo na decisão final.
-
-**Canary:** envia parte do tráfego para a nova versão.
-
-**Blue-Green:** mantém dois ambientes para facilitar a troca.
-
-**Feature Store:** centraliza features.
-
-**Model Card:** documenta características, uso e limitações do modelo.
-
-------------------------------------------------------------------------
-
-# 81. O modelo mental definitivo
-
-Se você precisar guardar apenas uma sequência, pense:
-
-``` text
-             MODELO
-                │
-                ▼
-          "Como colocar
-           em produção?"
-                │
-                ▼
-             DOCKER
-                │
-                ▼
-          "Como controlar
-           o ambiente?"
-                │
-                ▼
-              MLOPS
-                │
-       ┌────────┼────────┐
-       ▼        ▼        ▼
-     Código   Dados    Modelo
-       │        │        │
-      Git      DVC     MLflow
-                         │
-                         ▼
-                       Registry
-                         │
-                         ▼
-                       CI/CD
-                         │
-                         ▼
-                       Deploy
-                         │
-                         ▼
-                  Observabilidade
-                         │
-                         ▼
-                        Drift
-                         │
-                         ▼
-                  Retreinamento
-                         │
-                         ▼
-                       Challenger
-                         │
-                         ▼
-                    Novo Deploy
-                         │
-                         └──────► CICLO
+```text
+MODELO
+│
+▼
+"Como colocar
+em produção?"
+│
+▼
+DOCKER
+│
+▼
+"Como controlar
+o ambiente?"
+│
+▼
+MLOPS
+│
+┌────────┼────────┐
+▼        ▼        ▼
+Código   Dados    Modelo
+│        │        │
+Git      DVC      MLflow
+│
+▼
+Registry
+│
+▼
+CI/CD
+│
+▼
+Deploy
+│
+▼
+Observabilidade
+│
+▼
+Drift
+│
+▼
+Retreinamento
+│
+▼
+Challenger
+│
+▼
+Novo Deploy
+│
+└──────► CICLO
 ```
 
-------------------------------------------------------------------------
+---
 
-# 82. Conclusão
+# 70. Conclusão
 
-O ponto central é entender que **Machine Learning em produção é um
-sistema, não apenas um modelo**.
+&emsp;O ponto central é entender que **Machine Learning em produção é um sistema, não apenas um modelo**. O modelo depende de dados, código, ambiente, integração, monitoramento e processos de atualização, e cada uma dessas partes precisa ser tratada de forma organizada.
 
-Um modelo pode apresentar uma ótima métrica no notebook e ainda falhar
-por problemas de:
+&emsp;Nesse contexto, Docker ajuda a tornar o ambiente reproduzível, as ferramentas de versionamento e rastreabilidade registram como o modelo foi construído, CI/CD automatiza validações e entrega, e a observabilidade permite acompanhar o comportamento do sistema depois do deploy.
 
--   ambiente;
--   dependências;
--   dados;
--   pré-processamento;
--   integração;
--   infraestrutura;
--   segurança;
--   qualidade;
--   monitoramento;
--   mudança de distribuição.
+&emsp;Quando um modelo entra em produção, o trabalho não termina. É necessário observar mudanças nos dados e no comportamento, investigar problemas, validar novas versões e atualizar o modelo de forma controlada. Esse ciclo contínuo é a base da Engenharia de Machine Learning e do MLOps.
 
-O Docker resolve principalmente o problema de **empacotamento e
-isolamento do ambiente**.
-
-O FastAPI transforma o modelo em um **serviço consumível**.
-
-Git, DVC e MLflow aumentam a **rastreabilidade**.
-
-O Model Registry organiza o **ciclo de vida dos modelos**.
-
-CI/CD automatiza **testes, validações e entrega**.
-
-Observabilidade mostra **o que está acontecendo em produção**.
-
-KS, PSI e outras técnicas ajudam a identificar **mudanças estatísticas
-nos dados**.
-
-Champion/Challenger, Canary e Blue-Green permitem **atualizar modelos de
-maneira controlada**.
-
-E MLOps conecta tudo em um ciclo:
-
-``` text
-Desenvolver
- ↓
-Versionar
- ↓
-Treinar
- ↓
-Validar
- ↓
-Registrar
- ↓
-Empacotar
- ↓
-Testar
- ↓
-Publicar
- ↓
-Monitorar
- ↓
-Detectar mudanças
- ↓
-Retreinar
- ↓
-Validar novamente
- ↓
-Publicar novamente
-```
-
-O objetivo não é simplesmente ter um modelo funcionando.
-
-É conseguir responder:
-
-> **Qual modelo está em produção?**
-
-> **Com quais dados ele foi treinado?**
-
-> **Qual código o gerou?**
-
-> **Qual ambiente o executa?**
-
-> **Como sabemos que ele continua funcionando?**
-
-> **O que acontece se os dados mudarem?**
-
-> **Como substituímos o modelo com segurança?**
-
-Quando essas perguntas podem ser respondidas sistematicamente, estamos
-saindo de um projeto de ML experimental e entrando em **Engenharia de
-Machine Learning e MLOps**.
+> **A ideia central: um modelo pronto para produção precisa ser reproduzível, rastreável, observável e atualizável.**
