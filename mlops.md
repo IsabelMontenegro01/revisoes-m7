@@ -217,14 +217,14 @@ Aplicação
 
 # 6. VM x Container
 
-  Característica        VM                  Container
-  --------------------- ------------------- --------------------
-  Virtualização         Hardware            Ambiente/processos
-  Sistema operacional   Cada VM possui um   Compartilhado
-  Kernel                Próprio             Compartilhado
-  Consumo               Maior               Menor
-  Inicialização         Mais lenta          Mais rápida
-  Isolamento            Mais forte          Mais leve
+| Característica | VM | Container |
+|---|---|---|
+| Virtualização | Hardware | Ambiente/processos |
+| Sistema operacional | Cada VM possui um | Compartilhado |
+| Kernel | Próprio | Compartilhado |
+| Consumo | Maior | Menor |
+| Inicialização | Mais lenta | Mais rápida |
+| Isolamento | Mais forte | Mais leve |
 
 Containers são especialmente úteis quando queremos empacotar aplicações
 e suas dependências de maneira reproduzível.
@@ -267,7 +267,7 @@ Um container pode possuir uma visão isolada de:
 
 ### PID namespace
 
-Isola a árvore de processos. O processo principal pode ser visto como
+Process ID. Isola a árvore de processos. O processo principal pode ser visto como
 PID 1 dentro do container.
 
 ### Network namespace
@@ -1993,22 +1993,22 @@ Isso facilita:
 
 ------------------------------------------------------------------------
 
-# 73. Como todas as ferramentas se conectam
+## 73. Como todas as ferramentas se conectam
 
-  Problema       Ferramenta/conceito   O que resolve
-  -------------- --------------------- ------------------------
-  Código         Git                   Versionamento
-  Dados          DVC                   Versionamento de dados
-  Experimentos   MLflow                Rastreamento
-  Modelos        Model Registry        Versões e estágios
-  API            FastAPI               Serving
-  Contratos      Pydantic              Validação
-  Ambiente       Docker                Empacotamento
-  Entrega        CI/CD                 Automação
-  Saúde          Healthcheck           Verificação do serviço
-  Drift          KS / PSI / KL         Mudanças estatísticas
-  Features       Feature Store         Centralização
-  Governança     Model Cards           Documentação
+| Problema | Ferramenta/conceito | O que resolve |
+|---|---|---|
+| Código | Git | Versionamento |
+| Dados | DVC | Versionamento de dados |
+| Experimentos | MLflow | Rastreamento |
+| Modelos | Model Registry | Versões e estágios |
+| API | FastAPI | Serving |
+| Contratos | Pydantic | Validação |
+| Ambiente | Docker | Empacotamento |
+| Entrega | CI/CD | Automação |
+| Saúde | Healthcheck | Verificação do serviço |
+| Drift | KS / PSI / KL | Mudanças estatísticas |
+| Features | Feature Store | Centralização |
+| Governança | Model Cards | Documentação |
 
 ------------------------------------------------------------------------
 
