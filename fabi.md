@@ -1,4 +1,4 @@
-# Resumo dos Encontros 01–03 — Foco na parte da Fabi
+# Resumo dos Encontros 01–03
 
 > **Como ler este resumo**
 >
@@ -450,16 +450,6 @@ df_final = pd.concat(dfs, ignore_index=True)
 - **Hyperparameter tuning:** **GridSearchCV** (todas as combinações; exaustivo, mas custoso), **RandomizedSearchCV** (amostra combinações; cobre mais espaço com menos treinos), **Bayesiana/Optuna** (usa resultados anteriores para decidir a próxima tentativa). Bergstra & Bengio (2012): busca aleatória acha boas soluções com uma fração do orçamento do grid.
 - **Também na agenda:** Feature importance (permutation e SHAP) e MLflow (demonstração + exercício).
 
-## 6.5. Cronograma das aulas
-
-| Data | Conteúdo |
-| :--- | :--- |
-| 06/08 | Contexto da área de dados + EDA |
-| 11/08 | Feature Engineering + Feature Store |
-| 13/08 | Modelagem e Métricas |
-| 18/08 | Modelagem e Métricas (continuação) |
-| 25/08 | Ponderada em sala |
-| 05/10 | Revisão da prova + conceitos de MLOps |
 
 ---
 
